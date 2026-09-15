@@ -1,17 +1,69 @@
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 import Title from '../../components/ui/Title'
 import { assets } from '../../constants/assets'
 import CartTotal from '../Cart/components/CartTotal'
 import { useShopContext } from '../../hooks/useShopContext'
+import { placeOrderApi, placeOrderStripeApi } from '../../api/orders'
+import { ApiError } from '../../api/client'
+
+const initialAddress = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  street: '',
+  city: '',
+  state: '',
+  zipcode: '',
+  country: '',
+  phone: '',
+}
 
 const PlaceOrder = () => {
-  const [method, setMethod] = useState('cod')
+  const [method, setMethod] = useState<'stripe' | 'razorpay' | 'cod'>('cod')
+  const [address, setAddress] = useState(initialAddress)
+  const [loading, setLoading] = useState(false)
 
-  const { navigate } = useShopContext()
+  const { navigate, getCartCount } = useShopContext()
+
+  const onChange = (field: keyof typeof initialAddress, value: string) => {
+    setAddress((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const onSubmit = async () => {
+    if (getCartCount === 0) {
+      toast.error('Giỏ hàng đang trống.')
+      return
+    }
+
+    if (method === 'razorpay') {
+      toast.error(
+        'Phương thức thanh toán này chưa hỗ trợ, vui lòng chọn Stripe hoặc Cash on Delivery.'
+      )
+      return
+    }
+
+    setLoading(true)
+    try {
+      if (method === 'stripe') {
+        const { data } = await placeOrderStripeApi(address)
+        window.location.href = data.sessionUrl
+        return
+      }
+
+      await placeOrderApi(address)
+      toast.success('Đặt hàng thành công!')
+      navigate('/orders')
+    } catch (error) {
+      const message = error instanceof ApiError ? error.message : 'Đặt hàng thất bại.'
+      toast.error(message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-[[80vh] flex flex-col justify-between gap-4 border-t pt-5 sm:flex-row sm:pt-14">
-      {/* Left side */}
       <div className="flex w-full flex-col gap-4 sm:max-w-[480px]">
         <div className="my-3 text-xl sm:text-2xl">
           <Title text1="DELIVERY" text2="INFORMATION" />
@@ -19,57 +71,83 @@ const PlaceOrder = () => {
         <div className="flex gap-3">
           <input
             type="text"
+            value={address.firstName}
+            onChange={(e) => onChange('firstName', e.target.value)}
             placeholder="First name"
             className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+            required
           />
           <input
             type="text"
+            value={address.lastName}
+            onChange={(e) => onChange('lastName', e.target.value)}
             placeholder="Last name"
             className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+            required
           />
         </div>
         <input
           type="email"
+          value={address.email}
+          onChange={(e) => onChange('email', e.target.value)}
           placeholder="Email"
           className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+          required
         />
         <input
           type="text"
+          value={address.street}
+          onChange={(e) => onChange('street', e.target.value)}
           placeholder="Street"
           className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+          required
         />
         <div className="flex gap-3">
           <input
             type="text"
+            value={address.city}
+            onChange={(e) => onChange('city', e.target.value)}
             placeholder="City"
             className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+            required
           />
           <input
             type="text"
+            value={address.state}
+            onChange={(e) => onChange('state', e.target.value)}
             placeholder="State"
             className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+            required
           />
         </div>
         <div className="flex gap-3">
           <input
-            type="number"
+            type="text"
+            value={address.zipcode}
+            onChange={(e) => onChange('zipcode', e.target.value)}
             placeholder="Zipcode"
             className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+            required
           />
           <input
             type="text"
+            value={address.country}
+            onChange={(e) => onChange('country', e.target.value)}
             placeholder="Country"
             className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+            required
           />
         </div>
         <input
-          type="number"
+          type="text"
+          value={address.phone}
+          onChange={(e) => onChange('phone', e.target.value)}
           placeholder="Phone"
           className="w-full rounded border border-gray-300 px-3.5 py-1.5"
+          required
         />
       </div>
 
-      {/* Right side */}
       <div className="mt-8">
         <div className="mt-8 min-w-80">
           <CartTotal />
@@ -77,7 +155,6 @@ const PlaceOrder = () => {
 
         <div className="mt-12">
           <Title text1="PAYMENT" text2="METHOD" />
-          {/* Payment Method Selection */}
           <div className="flex flex-col gap-3 lg:flex-row">
             <div
               onClick={() => setMethod('stripe')}
@@ -110,10 +187,11 @@ const PlaceOrder = () => {
 
           <div className="mt-8 w-full text-end">
             <button
-              onClick={() => navigate('/orders')}
-              className="bg-black px-16 py-3 text-sm text-white"
+              onClick={onSubmit}
+              disabled={loading}
+              className="bg-black px-16 py-3 text-sm text-white disabled:opacity-50"
             >
-              PLACE ORDER
+              {loading ? 'PLACING...' : 'PLACE ORDER'}
             </button>
           </div>
         </div>

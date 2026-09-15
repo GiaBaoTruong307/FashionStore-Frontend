@@ -1,5 +1,6 @@
 import type { CartItems } from './cart'
 import type { Product } from './product'
+import type { AuthUser } from '../api/auth'
 
 export interface ShopContextType {
   products: Product[]
@@ -21,4 +22,10 @@ export interface ShopContextType {
   getCartAmount: () => number
 
   navigate: (path: string) => void
+
+  token: string | null
+  role: 'USER' | 'ADMIN' | null
+  user: AuthUser | null
+  login: (token: string) => void
+  logout: () => void
 }

@@ -8,7 +8,7 @@ const Navbar = () => {
   const [visible, setVisible] = useState(false)
   const location = useLocation()
 
-  const { setShowSearch, getCartCount } = useShopContext()
+  const { setShowSearch, getCartCount, token, role, logout, navigate } = useShopContext()
 
   const isActive = (path: string) => location.pathname === path
 
@@ -66,16 +66,32 @@ const Navbar = () => {
         />
 
         <div className="group relative">
-          <Link to="/login">
-            <img src={assets.profile_icon} className="w-5 cursor-pointer" alt="" />
-          </Link>
-          <div className="absolute right-0 hidden pt-4 group-hover:block">
-            <div className="flex w-36 flex-col gap-2 rounded bg-slate-100 px-5 py-3 text-gray-500">
-              <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Orders</p>
-              <p className="cursor-pointer hover:text-black">LogOut</p>
+          <img
+            onClick={() => !token && navigate('/login')}
+            src={assets.profile_icon}
+            className="w-5 cursor-pointer"
+            alt=""
+          />
+          {token && (
+            <div className="absolute right-0 hidden pt-4 group-hover:block">
+              <div className="flex w-36 flex-col gap-2 rounded bg-slate-100 px-5 py-3 text-gray-500">
+                {role === 'ADMIN' && (
+                  <p onClick={() => navigate('/admin')} className="cursor-pointer hover:text-black">
+                    Admin Panel
+                  </p>
+                )}
+                <p onClick={() => navigate('/profile')} className="cursor-pointer hover:text-black">
+                  My Profile
+                </p>
+                <p onClick={() => navigate('/orders')} className="cursor-pointer hover:text-black">
+                  Orders
+                </p>
+                <p onClick={logout} className="cursor-pointer hover:text-black">
+                  LogOut
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         <Link to="/cart" className="relative">
@@ -93,7 +109,6 @@ const Navbar = () => {
         />
       </div>
 
-      {/* Sidebar menu small screen */}
       <div
         className={`absolute inset-y-0 right-0 overflow-hidden bg-white transition-all ${
           visible ? 'w-full' : 'w-0'
