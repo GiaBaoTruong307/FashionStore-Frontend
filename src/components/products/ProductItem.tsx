@@ -1,10 +1,10 @@
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { useShopContext } from '../../hooks/useShopContext'
 import { motion } from 'framer-motion'
 
 interface Props {
   id: string
-  image: any[]
+  image: string[]
   name: string
   price: number
 }

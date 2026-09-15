@@ -5,11 +5,12 @@ import { type Product } from '../../../types'
 import { useShopContext } from '../../../hooks/useShopContext'
 
 interface Props {
+  id: string
   category: string
   subCategory: string
 }
 
-const RelatedProducts = ({ category, subCategory }: Props) => {
+const RelatedProducts = ({ id, category, subCategory }: Props) => {
   const { products } = useShopContext()
   const [related, setRelated] = useState<Product[]>([])
 
@@ -18,11 +19,11 @@ const RelatedProducts = ({ category, subCategory }: Props) => {
       let productsCopy = products.slice()
 
       productsCopy = productsCopy.filter(
-        (item) => item.category === category && item.subCategory === subCategory
+        (item) => item.id !== id && item.category === category && item.subCategory === subCategory
       )
       setRelated(productsCopy)
     }
-  }, [products])
+  }, [products, id, category, subCategory])
 
   return (
     <div className="my-24">

@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../../../context/ShopContext'
+import { useEffect, useState } from 'react'
+import { useShopContext } from '../../../hooks/useShopContext'
 import type { Product } from '../../../types'
 import { motion } from 'framer-motion'
 
@@ -7,13 +7,13 @@ import Title from '../../../components/ui/Title'
 import ProductItem from '../../../components/products/ProductItem'
 
 const BestSeller = () => {
-  const { products } = useContext(ShopContext)!
+  const { products } = useShopContext()
   const [bestSeller, setBestSeller] = useState<Product[]>([])
 
   useEffect(() => {
     const bestProduct = products.filter((item: Product) => item.bestseller)
     setBestSeller(bestProduct.slice(0, 5))
-  }, [])
+  }, [products])
 
   return (
     <motion.div
