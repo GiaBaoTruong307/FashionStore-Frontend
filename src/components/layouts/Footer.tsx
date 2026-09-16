@@ -50,7 +50,7 @@ const Footer = () => {
       <div>
         <hr />
         <p className="py-5 text-center text-sm">
-          Copyright 2025@ GiaBaoTruong - All Right Reserved
+          Copyright 2026@ GiaBaoTruong - All Right Reserved
         </p>
       </div>
     </motion.div>

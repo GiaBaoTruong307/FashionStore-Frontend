@@ -28,7 +28,10 @@ const AdminLayout = () => {
             </Link>
           ))}
         </nav>
-        <div className="p-3">
+        <div className="flex flex-col gap-1 border-t border-gray-700 p-3">
+          <Link to="/" className="rounded px-3 py-2 text-sm hover:bg-gray-800">
+            ← Về trang chủ
+          </Link>
           <button
             onClick={logout}
             className="w-full rounded px-3 py-2 text-left text-sm hover:bg-gray-800"

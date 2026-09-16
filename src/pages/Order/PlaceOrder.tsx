@@ -30,7 +30,9 @@ const PlaceOrder = () => {
     setAddress((prev) => ({ ...prev, [field]: value }))
   }
 
-  const onSubmit = async () => {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
     if (getCartCount === 0) {
       toast.error('Giỏ hàng đang trống.')
       return
@@ -63,7 +65,10 @@ const PlaceOrder = () => {
   }
 
   return (
-    <div className="min-h-[[80vh] flex flex-col justify-between gap-4 border-t pt-5 sm:flex-row sm:pt-14">
+    <form
+      onSubmit={onSubmit}
+      className="min-h-[[80vh] flex flex-col justify-between gap-4 border-t pt-5 sm:flex-row sm:pt-14"
+    >
       <div className="flex w-full flex-col gap-4 sm:max-w-[480px]">
         <div className="my-3 text-xl sm:text-2xl">
           <Title text1="DELIVERY" text2="INFORMATION" />
@@ -139,7 +144,7 @@ const PlaceOrder = () => {
           />
         </div>
         <input
-          type="text"
+          type="tel"
           value={address.phone}
           onChange={(e) => onChange('phone', e.target.value)}
           placeholder="Phone"
@@ -187,7 +192,7 @@ const PlaceOrder = () => {
 
           <div className="mt-8 w-full text-end">
             <button
-              onClick={onSubmit}
+              type="submit"
               disabled={loading}
               className="bg-black px-16 py-3 text-sm text-white disabled:opacity-50"
             >
@@ -196,7 +201,7 @@ const PlaceOrder = () => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   )
 }
 
