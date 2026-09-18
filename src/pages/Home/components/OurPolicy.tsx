@@ -7,6 +7,7 @@ const OurPolicy = () => {
       initial={{ opacity: 0, x: 200 }}
       transition={{ duration: 1 }}
       whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
       id="Privacy"
       className="flex flex-col justify-around gap-12 py-20 text-center text-xs text-gray-700 sm:flex-row sm:gap-2 sm:text-sm md:text-base"
     >

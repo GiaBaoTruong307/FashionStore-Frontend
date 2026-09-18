@@ -20,6 +20,7 @@ const BestSeller = () => {
       initial={{ opacity: 0, x: -200 }}
       transition={{ duration: 1 }}
       whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
       className="my-10"
     >
       <div className="py-8 text-center text-3xl">

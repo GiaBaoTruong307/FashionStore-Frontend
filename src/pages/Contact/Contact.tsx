@@ -8,6 +8,7 @@ const Contact = () => {
     <motion.div
       initial={{ scale: 1.3, opacity: 0 }}
       whileInView={{ scale: 1, opacity: 1 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
       <div className="border-t pt-10 text-center text-2xl">

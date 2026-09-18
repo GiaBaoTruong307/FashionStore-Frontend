@@ -8,6 +8,7 @@ const About = () => {
     <motion.div
       initial={{ scale: 0.5, opacity: 0 }}
       whileInView={{ scale: 1, opacity: 1 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
       <div className="border-t pt-8 text-center text-2xl">
@@ -61,7 +62,7 @@ const About = () => {
           <b>Exceptional Customer Service</b>
           <p className="text-gray-600">
             Our dedicated support team is here for you 24/7 via chat, email, or phone. Whether you
-            need sizing advice, styling tips, or help with an order—we’re always happy to assist.
+            need sizing advice, styling tips, or help with an order—we're always happy to assist.
           </p>
         </div>
       </div>
